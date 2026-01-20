@@ -1,0 +1,84 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # ========== MySQL 8.0 ==========
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: yjc118181
+      MYSQL_DATABASE: yy_api
+      TZ: Asia/Shanghai
+    command: >
+      mysqld
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "33601:3306"   # 宿主机 33601 → 容器 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - yy-net
+
+  # ========== Redis ==========
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --requirepass yyapi@redis
+    ports:
+      - "63791:6379"   # 宿主机 63791 → 容器 6379
+    networks:
+      - yy-net
+
+  # ========== Nacos ==========
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    container_name: nacos
+    environment:
+      MODE: standalone
+    ports:
+      - "8848:8848"
+    networks:
+      - yy-net
+
+  # ========== 后台服务 ==========
+  yy-api-backend:
+    build:
+      context: ./yy-api-backend
+    container_name: yy-api-backend
+    ports:
+      - "8111:8111"
+      - "20882:20882"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+    networks:
+      - yy-net
+
+  # ========== 网关服务 ==========
+  yy-api-gateway:
+    build:
+      context: ./yy-api-gateway
+    container_name: yy-api-gateway
+    ports:
+      - "8012:8012"
+      - "20881:20881"
+    environment:
+      BACKEND_URL: http://yy-api-backend:8111
+    depends_on:
+      - yy-api-backend
+      - nacos
+    networks:
+      - yy-net
+
+volumes:
+  mysql_data:
+
+networks:
+  yy-net:
+    driver: bridge

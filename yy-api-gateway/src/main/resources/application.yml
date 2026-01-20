@@ -1,0 +1,20 @@
+# yy-api-gateway/src/main/resources/application.yml
+spring:
+  application:
+    name: yy-api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: backend_route
+          uri: ${BACKEND_URL:http://yy-api-backend:8111}
+          predicates:
+            - Path=/api/**
+
+server:
+  port: 8012
+
+dubbo:
+  registry:
+    address: nacos://nacos:8848
+  protocol:
+    port: 20881
