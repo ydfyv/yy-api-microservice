@@ -4,6 +4,9 @@
 # Dockerfile.backend （放在项目根目录）
 FROM maven:3.8.6-openjdk-8 AS builder
 
+# 设置 Maven 使用国内镜像
+COPY settings.xml /root/.m2/settings.xml
+
 # 工作目录为整个项目
 WORKDIR /build
 

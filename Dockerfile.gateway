@@ -2,6 +2,10 @@
 
 # Dockerfile.gateway
 FROM maven:3.8.6-openjdk-8 AS builder
+
+# 设置 Maven 使用国内镜像
+COPY settings.xml /root/.m2/settings.xml
+
 WORKDIR /build
 COPY . .
 RUN mvn clean package -pl yy-api-gateway -am -DskipTests
