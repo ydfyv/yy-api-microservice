@@ -19,6 +19,7 @@ services:
       - "33601:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
     networks:
       - yy-net
 
@@ -38,6 +39,10 @@ services:
     container_name: nacos
     environment:
       MODE: standalone
+      JVM_XMS: 128m
+      JVM_XMX: 256m
+      JVM_MS: 64m
+      JVM_MMS: 128m
     ports:
       - "8848:8848"
     networks:
@@ -54,6 +59,7 @@ services:
       - "20882:20882"
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      JAVA_OPTS: "-Xms192m -Xmx384m -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom"
     depends_on:
       - mysql
       - redis
@@ -72,6 +78,7 @@ services:
       - "20881:20881"
     environment:
       BACKEND_URL: http://yy-api-backend:8111
+      JAVA_OPTS: "-Xms192m -Xmx384m -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom"
     depends_on:
       - yy-api-backend
       - nacos
