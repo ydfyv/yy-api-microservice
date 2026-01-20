@@ -19,8 +19,8 @@ RUN mvn clean package -pl yy-api-backend -am -DskipTests
 # 运行阶段
 FROM eclipse-temurin:8-jre-alpine
 WORKDIR /app
-# 从 builder 阶段复制 backend 的 jar
-COPY --from=builder /build/yy-api-backend/target/yy-api-backend.jar app.jar
+# 替换原来的 COPY 行
+COPY --from=builder /build/yy-api-backend/target/yy-api-backend-*.jar app.jar
 
 EXPOSE 8111 20882
 ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
