@@ -1,0 +1,18 @@
+[mysqld]
+# 基础设置
+default_authentication_plugin=mysql_native_password
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+# 内存优化（关键！）
+innodb_buffer_pool_size=128M        # 原默认 128M～1G，压到 128M
+innodb_log_file_size=32M
+max_connections=50                  # 原默认 151，降低并发
+key_buffer_size=16M
+table_open_cache=64
+tmp_table_size=32M
+max_heap_table_size=32M
+
+# 日志精简
+log_error_verbosity=2
+slow_query_log=0
