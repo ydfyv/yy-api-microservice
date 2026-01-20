@@ -8,6 +8,6 @@ RUN mvn clean package -pl yy-api-gateway -am -DskipTests
 
 FROM eclipse-temurin:8-jre-alpine
 WORKDIR /app
-COPY --from=builder /build/yy-api-gateway/target/yy-api-gateway.jar app.jar
+COPY --from=builder /build/yy-api-gateway/target/yy-api-gateway-*.jar app.jar
 EXPOSE 8012 20881
 ENTRYPOINT ["java", "-jar", "app.jar"]
