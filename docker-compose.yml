@@ -16,7 +16,7 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
     ports:
-      - "33601:3306"   # 宿主机 33601 → 容器 3306
+      - "33601:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -28,7 +28,7 @@ services:
     container_name: redis
     command: redis-server --requirepass yyapi@redis
     ports:
-      - "63791:6379"   # 宿主机 63791 → 容器 6379
+      - "63791:6379"
     networks:
       - yy-net
 
@@ -46,7 +46,8 @@ services:
   # ========== 后台服务 ==========
   yy-api-backend:
     build:
-      context: ./yy-api-backend
+      context: .                     # ← 构建上下文是项目根目录
+      dockerfile: Dockerfile.backend # ← 使用根目录下的专用 Dockerfile
     container_name: yy-api-backend
     ports:
       - "8111:8111"
@@ -63,7 +64,8 @@ services:
   # ========== 网关服务 ==========
   yy-api-gateway:
     build:
-      context: ./yy-api-gateway
+      context: .                     # ← 同样使用项目根目录作为上下文
+      dockerfile: Dockerfile.gateway # ← 使用根目录下的专用 Dockerfile
     container_name: yy-api-gateway
     ports:
       - "8012:8012"
