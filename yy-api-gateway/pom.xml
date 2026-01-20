@@ -97,7 +97,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.yy.yyapigateway.YyApiGatewayApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
